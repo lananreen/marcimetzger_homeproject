@@ -159,6 +159,9 @@ function SearchListing() {
           />
         </div>
       </form>
+      <button type="button" className="search-listing-button">
+        SEARCH NOW
+      </button>
     </section>
   )
 }

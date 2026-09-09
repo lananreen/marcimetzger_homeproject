@@ -4,6 +4,8 @@ import Purpose from './sections/Purpose'
 import SearchListing from './sections/SearchListing'
 import Affiliations from './sections/Affiliations'
 import PhotoGallery from './sections/PhotoGallery'
+import Services from './sections/Services'
+import Contacts from './sections/Contacts'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import './App.css'
@@ -18,6 +20,8 @@ function App() {
       <SearchListing />
       <Affiliations />
       <PhotoGallery />
+      <Services />
+      <Contacts />
       <Footer />
     </>
   )
