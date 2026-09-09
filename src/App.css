@@ -32,11 +32,12 @@
 }
 
 .about-text h2 {
-  font-size: 40px;
+  font-size: 46px;
+  font-weight: 600;
   color: #000;
 
   @media (max-width: 1024px) {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
@@ -174,10 +175,23 @@
   }
 }
 
+@keyframes navbar-slide-down {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .default-eyebrow,
   .default-section h1,
-  .default-cta {
+  .default-cta,
+  .navbar {
     animation: none;
   }
 }
@@ -200,6 +214,7 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   box-shadow: var(--shadow);
+  animation: navbar-slide-down 0.6s ease-out both;
 }
 
 .navbar-logo-link {
@@ -225,7 +240,7 @@
 .navbar-links a {
   color: #000;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 200;
   letter-spacing: 1px;
   white-space: nowrap;
   display: inline-block;
@@ -271,15 +286,21 @@
 }
 
 .purpose-title {
-  font-size: 48px;
+  font-size: 54px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #000;
 
   @media (max-width: 1024px) {
-    font-size: 32px;
+    font-size: 34px;
   }
 }
+
+.purpose-title .blur-text {
+  font-weight: 600;
+}
+
 
 .purpose-images {
   display: flex;
@@ -306,6 +327,7 @@
   outline: none;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: var(--shadow);
 
   @media (max-width: 1024px) {
     width: min(90%, 560px);
@@ -426,7 +448,8 @@
 }
 
 .search-listing-heading {
-  font-size: 48px;
+  font-size: 54px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #fff;
@@ -434,7 +457,7 @@
   margin: 0 0 24px;
 
   @media (max-width: 1024px) {
-    font-size: 32px;
+    font-size: 34px;
   }
 }
 
@@ -630,12 +653,13 @@
 }
 
 .affiliations-title {
-  font-size: 40px;
+  font-size: 46px;
+  font-weight: 600;
   color: #000;
   margin: 0 0 32px;
 
   @media (max-width: 1024px) {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
@@ -679,7 +703,8 @@
 }
 
 .photo-gallery-title {
-  font-size: 40px;
+  font-size: 46px;
+  font-weight: 600;
   color: #fff;
   font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
   text-transform: uppercase;
@@ -687,7 +712,7 @@
   margin: 0 0 16px;
 
   @media (max-width: 1024px) {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
@@ -736,14 +761,15 @@
 }
 
 .services-title {
-  font-size: 40px;
+  font-size: 46px;
+  font-weight: 600;
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin: 0;
 
   @media (max-width: 1024px) {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
@@ -833,14 +859,15 @@
 }
 
 .contacts-title {
-  font-size: 40px;
+  font-size: 46px;
+  font-weight: 600;
   color: #000;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin: 0;
 
   @media (max-width: 1024px) {
-    font-size: 28px;
+    font-size: 30px;
   }
 }
 
