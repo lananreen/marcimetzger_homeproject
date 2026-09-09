@@ -1,7 +1,10 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import './AccordionGallery.css';
+
+const MOBILE_QUERY = '(max-width: 768px)';
 
 const DEFAULT_ITEMS = [
   { image: 'https://picsum.photos/id/1015/900/1200', label: 'Canyon', link: '#' },
@@ -41,15 +44,29 @@ const AccordionGallery = ({
   const tlRef = useRef(null);
   const firstRunRef = useRef(true);
   const mediaSizeRef = useRef(320);
+  const viewportRef = useRef(null);
+  const pointerStartRef = useRef(null);
 
   const vertical = orientation === 'vertical';
   const count = items.length;
   const [active, setActive] = useState(Math.min(Math.max(defaultIndex, 0), count - 1));
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(MOBILE_QUERY).matches : false
+  );
+  const [slideIndex, setSlideIndex] = useState(Math.min(Math.max(defaultIndex, 0), count - 1));
 
   const prefersReduced =
     typeof window !== 'undefined' && window.matchMedia
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
       : false;
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mql = window.matchMedia(MOBILE_QUERY);
+    const onChange = e => setIsMobile(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   const applyLayout = useCallback(
     animate => {
@@ -124,6 +141,7 @@ const AccordionGallery = ({
   );
 
   useEffect(() => {
+    if (isMobile) return;
     const el = rootRef.current;
     if (!el) return;
 
@@ -141,12 +159,65 @@ const AccordionGallery = ({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [applyLayout, gap, count, expandRatio, vertical]);
+  }, [applyLayout, gap, count, expandRatio, vertical, isMobile]);
 
   useEffect(() => {
+    if (isMobile) return;
     applyLayout(!firstRunRef.current);
     firstRunRef.current = false;
-  }, [applyLayout]);
+  }, [applyLayout, isMobile]);
+
+  const goToSlide = useCallback(
+    (i, smooth = true) => {
+      const vp = viewportRef.current;
+      if (!vp) return;
+      const idx = ((i % count) + count) % count;
+      const slide = vp.children[idx];
+      if (!slide) return;
+      vp.scrollTo({
+        left: slide.offsetLeft - (vp.clientWidth - slide.offsetWidth) / 2,
+        behavior: smooth && !prefersReduced ? 'smooth' : 'auto'
+      });
+      setSlideIndex(idx);
+    },
+    [count, prefersReduced]
+  );
+
+  useEffect(() => {
+    if (!isMobile) return;
+    goToSlide(Math.min(Math.max(defaultIndex, 0), count - 1), false);
+  }, [isMobile, goToSlide, defaultIndex, count]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const vp = viewportRef.current;
+    if (!vp) return;
+    let frame = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const slides = vp.children;
+        if (!slides.length) return;
+        const center = vp.scrollLeft + vp.clientWidth / 2;
+        let best = 0;
+        let bestDist = Infinity;
+        for (let i = 0; i < slides.length; i++) {
+          const s = slides[i];
+          const dist = Math.abs(s.offsetLeft + s.offsetWidth / 2 - center);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = i;
+          }
+        }
+        setSlideIndex(best);
+      });
+    };
+    vp.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      vp.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, [isMobile, count]);
 
   useEffect(
     () => () => {
@@ -178,6 +249,96 @@ const AccordionGallery = ({
       setActive((i - 1 + count) % count);
     }
   };
+
+  const handleSlideClick = (i, e) => {
+    const start = pointerStartRef.current;
+    if (start && (Math.abs(e.clientX - start.x) > 10 || Math.abs(e.clientY - start.y) > 10)) {
+      e.preventDefault();
+      return;
+    }
+    if (i !== slideIndex) {
+      e.preventDefault();
+      goToSlide(i);
+    } else if (onSelect) {
+      e.preventDefault();
+      onSelect(items[i], i);
+    }
+  };
+
+  if (isMobile) {
+    return (
+      <div
+        className={`ag-carousel${className ? ` ${className}` : ''}`}
+        style={{
+          '--ag-accent': accentColor,
+          '--ag-overlay': overlayColor,
+          '--ag-text': textColor,
+          '--ag-gap': `${gap}px`,
+          '--ag-radius': `${radius}px`
+        }}
+        role="group"
+        aria-roledescription="carousel"
+        aria-label="Image carousel"
+      >
+        <div
+          className="ag-carousel__viewport"
+          ref={viewportRef}
+          style={{ height: `${height}px` }}
+          onPointerDown={e => {
+            pointerStartRef.current = { x: e.clientX, y: e.clientY };
+          }}
+        >
+          {items.map((item, i) => {
+            const Tag = item.link ? 'a' : 'div';
+            return (
+              <Tag
+                key={i}
+                className={`ag-carousel__slide${i === slideIndex ? ' ag-carousel__slide--active' : ''}`}
+                href={item.link || undefined}
+                onClick={e => handleSlideClick(i, e)}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`${i + 1} of ${count}${item.label ? `: ${item.label}` : ''}`}
+              >
+                <img src={item.image} alt={item.alt || item.label || ''} draggable="false" />
+                <span className="ag-carousel__overlay" aria-hidden="true" />
+                {showLabels && item.label && <span className="ag-carousel__label">{item.label}</span>}
+              </Tag>
+            );
+          })}
+        </div>
+        <button
+          type="button"
+          className="ag-carousel__arrow ag-carousel__arrow--prev"
+          onClick={() => goToSlide(slideIndex - 1)}
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={22} />
+        </button>
+        <button
+          type="button"
+          className="ag-carousel__arrow ag-carousel__arrow--next"
+          onClick={() => goToSlide(slideIndex + 1)}
+          aria-label="Next slide"
+        >
+          <ChevronRight size={22} />
+        </button>
+        <div className="ag-carousel__dots" role="tablist" aria-label="Choose slide">
+          {items.map((item, i) => (
+            <button
+              key={i}
+              type="button"
+              role="tab"
+              aria-selected={i === slideIndex}
+              aria-label={`Go to slide ${i + 1}${item.label ? `: ${item.label}` : ''}`}
+              className={`ag-carousel__dot${i === slideIndex ? ' ag-carousel__dot--active' : ''}`}
+              onClick={() => goToSlide(i)}
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
