@@ -1,0 +1,118 @@
+.accordion-gallery {
+  position: relative;
+  display: flex;
+  gap: var(--ag-gap);
+  width: 100%;
+  max-width: 100%;
+  perspective: 1200px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.accordion-gallery--vertical {
+  flex-direction: column;
+  perspective: none;
+}
+
+.ag-panel {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  will-change: flex-grow, transform;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+.ag-panel:focus-visible {
+  outline: 2px solid var(--ag-accent);
+  outline-offset: 3px;
+}
+
+.accordion-gallery--vertical .ag-panel {
+  transform: rotateX(0deg);
+}
+
+.ag-panel__frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.ag-panel__media {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--ag-media-size, 320px);
+  height: var(--ag-media-size, 320px);
+  transform: translate(-50%, -50%);
+  filter: grayscale(var(--ag-gray, 1)) brightness(calc(1 - var(--ag-dim, 0.35)));
+  will-change: transform, filter;
+  pointer-events: none;
+}
+
+.ag-panel__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.ag-panel__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ag-overlay) 0%, transparent) 45%,
+    color-mix(in srgb, var(--ag-overlay) 72%, transparent) 100%
+  );
+}
+
+.ag-panel__label {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.ag-panel__bar {
+  width: 3px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--ag-accent);
+  opacity: 0;
+}
+
+.ag-panel__text {
+  color: var(--ag-text);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+@media (max-width: 1024px) {
+  .ag-panel__label {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .ag-panel__text {
+    font-size: 13px;
+  }
+}
