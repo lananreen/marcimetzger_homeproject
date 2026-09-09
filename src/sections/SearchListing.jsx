@@ -39,7 +39,7 @@ const NEVADA_TOWNS = [
 
 function SearchListing() {
   const [location, setLocation] = useState('')
-  const [anyLocation, setAnyLocation] = useState(true)
+  const [anyLocation, setAnyLocation] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [activeIndex, setActiveIndex] = useState(-1)
   const [type, setType] = useState('')
