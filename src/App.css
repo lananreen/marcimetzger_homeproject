@@ -220,8 +220,8 @@
   width: min(1126px, calc(100% - 32px));
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
   box-shadow: var(--shadow);
   animation: navbar-slide-down 0.6s ease-out both;
 }
