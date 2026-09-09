@@ -137,6 +137,11 @@
   @media (max-width: 1024px) {
     font-size: 56px;
   }
+
+  @media (max-width: 600px){
+    font-size: 35px;
+  }
+
 }
 
 .default-cta {
@@ -157,6 +162,10 @@
   cursor: pointer;
   transition: transform 0.2s ease;
   animation: default-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+
+  @media (max-width:600px){
+    font-size: 15px;
+  }
 }
 
 .default-cta:hover {
@@ -251,21 +260,72 @@
   transform: scale(1.1);
 }
 
+.navbar-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding: 6px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.navbar-burger:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
 @media (max-width: 1024px) {
   .navbar {
     top: 8px;
     gap: 16px;
     padding: 8px 16px;
     width: calc(100% - 16px);
+    flex-wrap: wrap;
   }
 
   .navbar-logo {
     height: 42px;
   }
 
+  .navbar-burger {
+    display: flex;
+  }
+
   .navbar-links {
-    gap: 14px;
-    font-size: 15px;
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+    width: 100%;
+    margin: 8px 0 0;
+    padding: 8px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 16px;
+    order: 3;
+  }
+
+  .navbar-links--open {
+    display: flex;
+  }
+
+  .navbar-links li {
+    text-align: right;
+  }
+
+  .navbar-links a {
+    display: block;
+    padding: 12px 8px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+  }
+
+  .navbar-links a:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: none;
   }
 }
 
@@ -402,6 +462,48 @@
   max-height: 260px;
   opacity: 1;
   margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+  .purpose-card {
+    width: min(80%, 300px);
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .purpose-image {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .purpose-card-caption {
+    position: absolute;
+    inset: 0;
+    justify-content: flex-end;
+    padding: 24px 20px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.45) 50%,
+      transparent 100%
+    );
+  }
+
+  .purpose-hover-text {
+    max-height: none;
+    opacity: 1;
+    margin-top: 4px;
+    overflow: visible;
+    font-size: 14px;
+  }
+
+  @media (max-width: 600px){
+     .purpose-hover-text {
+      font-size: 12px;  
+  }
+    
+
+  }
 }
 
 .search-listing {
