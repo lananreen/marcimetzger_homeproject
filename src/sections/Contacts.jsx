@@ -1,4 +1,18 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
+
+import ScrollReveal from '../components/ScrollReveal'
+
+const revealEnd = 'top 55%'
+
+const slideInVariants = {
+  hidden: { opacity: 0, y: 80 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut', delay: i * 0.15 }
+  })
+}
 
 function Contacts() {
   const [showPopup, setShowPopup] = useState(false)
@@ -13,9 +27,22 @@ function Contacts() {
 
   return (
     <section id="contacts" className="section contacts">
-      <h2 className="contacts-title">Call or Visit</h2>
+      <ScrollReveal
+        textClassName="contacts-title"
+        rotationEnd={revealEnd}
+        wordAnimationEnd={revealEnd}
+      >
+        Call or Visit
+      </ScrollReveal>
       <div className="contacts-grid">
-        <div className="contacts-form-container">
+        <motion.div
+          className="contacts-form-container"
+          variants={slideInVariants}
+          custom={0}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           <h3 className="contacts-form-header">Send us a message!</h3>
           <p className="contacts-form-text">
             Have questions about any of our listings, or curious about what your
@@ -45,9 +72,16 @@ function Contacts() {
               Send Message
             </button>
           </form>
-        </div>
+        </motion.div>
         <div className="contacts-right">
-          <div className="contacts-info-container">
+          <motion.div
+            className="contacts-info-container"
+            variants={slideInVariants}
+            custom={1}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <h3 className="contacts-info-header">Contact Information</h3>
             <p className="contacts-info-name">
               Marci Metzger - THE RIDGE REALTY GROUP
@@ -64,8 +98,15 @@ function Contacts() {
               Appointments outside office hours available upon request. Just
               call!
             </p>
-          </div>
-          <div className="contacts-map">
+          </motion.div>
+          <motion.div
+            className="contacts-map"
+            variants={slideInVariants}
+            custom={2}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4497.418560446718!2d-116.0276130241882!3d36.21450277241984!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c637c1f4d7bcb3%3A0xa8d2ba43a3401d7!2sDesert%20View%20Hospital!5e1!3m2!1sen!2sph!4v1788938231669!5m2!1sen!2sph"
               style={{ border: 0 }}
@@ -74,7 +115,7 @@ function Contacts() {
               referrerPolicy="strict-origin-when-cross-origin"
               title="The Ridge Realty Group location map"
             />
-          </div>
+          </motion.div>
         </div>
       </div>
       {showPopup && (

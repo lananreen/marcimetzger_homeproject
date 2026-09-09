@@ -1,4 +1,8 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const NEVADA_TOWNS = [
   'Pahrump',
@@ -41,6 +45,54 @@ function SearchListing() {
   const [type, setType] = useState('')
   const [rooms, setRooms] = useState('')
   const inputRef = useRef(null)
+  const sectionRef = useRef(null)
+  const headingRef = useRef(null)
+  const panelRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        [headingRef.current, panelRef.current],
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 70%'
+          }
+        }
+      )
+
+      gsap.fromTo(
+        buttonRef.current,
+        { opacity: 0, scale: 0.4 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: 'back.out(1.7)',
+          clearProps: 'transform,opacity',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 70%'
+          }
+        }
+      )
+    }, section)
+
+    return () => {
+      ctx.revert()
+    }
+  }, [])
 
   const suggestions = useMemo(() => {
     if (!location.trim()) return []
@@ -74,10 +126,20 @@ function SearchListing() {
   }
 
   return (
-    <section id="search-listing" className="section search-listing">
+    <section
+      id="search-listing"
+      ref={sectionRef}
+      className="section search-listing"
+    >
       <div className="search-listing-bg" aria-hidden="true" />
-      <h2 className="search-listing-heading">Find Your Dream Home</h2>
-      <form className="search-listing-panel" onSubmit={(e) => e.preventDefault()}>
+      <h2 ref={headingRef} className="search-listing-heading">
+        Find Your Dream Home
+      </h2>
+      <form
+        ref={panelRef}
+        className="search-listing-panel"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <h3 className="search-listing-title">Search Listings</h3>
         <div className="search-listing-field search-listing-field-location">
           <label htmlFor="search-location">Location</label>
@@ -159,7 +221,11 @@ function SearchListing() {
           />
         </div>
       </form>
-      <button type="button" className="search-listing-button">
+      <button
+        type="button"
+        ref={buttonRef}
+        className="search-listing-button"
+      >
         SEARCH NOW
       </button>
     </section>

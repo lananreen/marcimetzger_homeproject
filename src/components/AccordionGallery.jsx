@@ -30,7 +30,8 @@ const AccordionGallery = ({
   trigger = 'hover',
   showLabels = true,
   grayscale = true,
-  className = ''
+  className = '',
+  onSelect
 }) => {
   const rootRef = useRef(null);
   const panelRefs = useRef([]);
@@ -162,6 +163,9 @@ const AccordionGallery = ({
     if (i !== active) {
       e.preventDefault();
       setActive(i);
+    } else if (onSelect) {
+      e.preventDefault();
+      onSelect(items[i], i);
     }
   };
 
